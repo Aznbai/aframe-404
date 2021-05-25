@@ -1,0 +1,297 @@
+<!doctype HTML>
+<html>
+
+<head>
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.0.4/aframe.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"
+        integrity="sha512-/gO16YMp20RIqCZXZyvMlzALQqEoiDU0akshw25wFiXCRGl+0p/HPWkOd8HWFn6bnatGhxakGLfYhWaPPVQIyA=="
+        crossorigin="anonymous"></script>
+    <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+    <style type="text/css">
+    a-scene * {
+        z-index: 110;
+    }
+
+    .rs-base {
+        z-index: 10;
+        border-radius: 6px;
+    }
+
+    #infobox,
+    #linkbox {
+        width: 300px;
+
+        font-family: monospace;
+        font-size: 10px;
+        position: fixed;
+        padding: 0 10px 0px;
+        color: #ccc;
+        background: rgba(51, 51, 51, 0.85);
+        border-radius: 6px;
+
+    }
+
+    #infobox {
+        z-index: 10;
+        bottom: 50px;
+        left: 20px;
+    }
+
+    #linkbox {
+        z-index: 1000;
+        bottom: 10px;
+        left: 20px;
+    }
+
+
+    h1,
+    h2,
+    h3,
+    ul,
+        {
+        font-weight: 300;
+        margin: 0 0 5px;
+        padding: 0;
+        font-size: 1.4em;
+    }
+
+    li {
+        list-style: none;
+        /*font-size: 80%;*/
+    }
+
+    a {
+        text-decoration: none;
+        color: #eee;
+    }
+    </style>
+</head>
+
+<body style='margin : 0px; overflow: hidden;'>
+    <!-- we add detectionMode and matrixCodeType to tell AR.js to recognize barcode markers -->
+    <a-scene shadow="type: pcfsoft"
+        embedded
+        vr-mode-ui="enabled: true"
+        renderer="
+            antialias: false;
+            colorManagement: true;
+            sortObjects: true;
+            physicallyCorrectLights: true;
+            maxCanvasWidth: 1920;
+            maxCanvasHeight: 1920;
+            precision:low;
+            logarithmicDepthBuffer: true;"
+        arjs="
+            sourceType: webcam;
+            debugUIEnabled: false;
+            detectionMode: mono_and_matrix;
+            matrixCodeType: 3x3;"
+        stats=""
+        inspector=""
+        keyboard-shortcuts=""
+        screenshot="">
+        <a-assets>
+            <!--   <video id="my-video"
+                src="https://ar.hyperpainting.net/assets/bubble.mp4"
+                autoplay="true"> -->
+            <a-asset-item id="hp"
+                src="https://ar.hyperpainting.net/assets/hp-micro-123-selfexport.glb"></a-asset-item>
+            <a-mixin id="orbitHP"
+                animation__x="
+                    property: object3D.rotation.x;
+                    to: -360;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur:60000"
+                animation__y="
+                    property: object3D.rotation.y;
+                    to: -360;
+                    loop: true;
+                    easing:easeInOutSine;
+                    dur: 100000"
+                animation__z="
+                    property: object3D.rotation.z;
+                    to: -360;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur: 80000"
+  >
+            </a-mixin>
+            <a-mixin id="orbitCbk"
+                animation__x="
+                    property: object3D.rotation.x;
+                    to: -360;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur: 18200"
+                animation__y="
+                    property: object3D.rotation.y;
+                    to: -360;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur: 21800"
+                animation__z="
+                    property: object3D.rotation.z;
+                    to: -360;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur: 25100"
+                animation__scale="
+                    property:scale;
+                    to: 0.8 0.8 0.8;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur:30000;
+                    dir:alternate"
+                animation__material="
+                    property: material.metalness;
+                    from:0.0005;
+                    to: 1;
+                    loop: true;
+                    easing: easeInOutQuad;
+                    dur: 5000;
+                    dir:alternate">
+            </a-mixin>
+            <a-mixin id="pulseLightVio"
+                animation__intensity="
+                property: light.intensity;
+                from:8;
+                to: 20;
+                loop: true;
+                dur: 2200;
+                dir:alternate"
+                animation__color="
+                property: light.color;
+                from:rgb(200, 70, 30);
+                to:rgb(0, 30, 180);
+                dur: 35000;
+                loop:true; 
+                easings: easeInOutSine;
+                dir: alternate;">
+            </a-mixin>
+            <a-mixin id="pulseLightGreen"
+                animation__intensity="
+                property: light.intensity;
+                from:40;
+                to: 10;
+                loop: true;
+                easing: easeInOutQuad;
+                dur: 4000;
+                dir:alternate"
+                animation__color="
+                property: light.color;
+                from:rgb(20, 230, 130);
+                to:rgb(180, 30, 70);
+                dur: 20000;
+                loop:true; 
+                easings: easeInOutQuad;
+                dir: alternate;">
+            </a-mixin>
+            <a-mixin id="pulseMaterial"
+                animation="
+                property: material.metalness;
+                from:0.5;
+                to: 1;
+                loop: true;
+                easing: easeInOutQuad;
+                dur: 5000;
+                dir:alternate">
+            </a-mixin>
+        </a-assets>
+        <a-marker id="hp-marker"
+            position=" 0 0 0"
+            type='barcode'
+            value='20'
+            smooth='true'
+            smoothCount='5'
+            smoothTolerance='0.2'
+            smoothThreshold='5'>
+            <a-gltf-model src="#hp"
+                position="0 0 0"
+                rotation="0 0 0"
+                scale="0.05 0.05 0.05"
+                mixin="orbitHP"
+                id="hp-model">
+            </a-gltf-model>
+        </a-marker>
+        <a-entity camera="fov:120">
+        </a-entity>
+        <a-entity>
+            <a-light mixin="pulseLightVio"
+                castShadow="false"
+                intensity="12"
+                position="-25 -5 -14"
+                rotation="180 120 30"
+                scale="4 4 4"
+                angle="-130"
+                distance="220"
+                decay="0.6"
+                type="spot"
+                color="#bd2bee"
+                penumbra="0.69"
+                visible="">
+                <a-sphere radius="0.1"
+                    emissive="#3f2"
+                    emissiveIntensity="100"
+                    color="#EF2D5E">
+                </a-sphere>
+            </a-light>
+        </a-entity>
+        <a-entity rotation="0 30 0">
+            <a-light mixin="pulseLightGreen"
+                castShadow="false"
+                intensity="5.6"
+                position="50 20 0"
+                scale="4 4 4"
+                angle="230"
+                distance="220"
+                type="point"
+                color="#46ec67"
+                decay="0.6"
+                visible="">
+                <a-sphere radius="0.1"
+                    emissive="#3f2"
+                    emissiveIntensity="1000"
+                    color="#3ef"></a-sphere>
+            </a-light>
+        </a-entity>
+    </a-scene>
+    <div id="infobox">
+        <h2>Hyperpainting WebAR Sandbox</h2>
+        <h3>mixins:</h3>
+        <ul>
+            <li>light color animation</li>
+            <li>xyz-orbit animation</li>
+        </ul>
+        <h3>light features</h3>
+        <ul>
+            <li>green: directional </li>
+            <li>violet: spot </li>
+            <li>white: ambient</li>
+        </ul>
+        <!-- <h3>materials:</h3>
+        <ul>
+            <li>shadow receive</li>
+            <li>imported gltf material</li>
+            <li>defined properties instead of deleted material ones</li>
+        </ul>
+        <h3>scene</h3>
+         -->
+        <!--  <h3>components:</h3>
+        <ul>
+            <li>mirror component</li>
+            <li>bubble component</li>
+            <li></li>
+        </ul> -->
+    </div>
+    <div id="linkbox">
+        <p> Visit <a href="http://hyperpainting.net/"> hyperpainting.net</a> for further information
+        </p>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
